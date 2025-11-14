@@ -3,6 +3,7 @@ import random
 import numpy as np
 import tensorflow as tf
 import model.SimpleModelTrainUtils as smtu
+import model.CustomModelTrainUtils as cmtu
 
 def enviroment():
     print(f"Enviroment: ")
@@ -22,5 +23,10 @@ def reproducibility():
     tf.random.set_seed(42)
     
 def buildSimpleTranformer():
-    
     smtu.build_and_train_simpleTrasformer()
+    
+def builCustomTransformer():
+    
+    cmtu.build_and_train_simpleTrasformer()
+    
+    
