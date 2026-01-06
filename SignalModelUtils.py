@@ -25,12 +25,22 @@ def enviroment():
     print(f"\tNumpy  {np.__version__}")
     print(f"\tTensor Flow Version: {tf.__version__}")
     print(f"\tKeras Version: {tf.keras.__version__}")
-    gpu = len(tf.config.list_physical_devices('GPU'))>0
-    print("\tGPU is", "available" if gpu else "NOT AVAILABLE")
     
     print(f"\tEager execution: {tf.executing_eagerly()} ")
-    print("-----------------------------------------------------------------")
     
+    gpus = tf.config.list_physical_devices('GPU')
+    
+    if gpus:
+        print(f"\n\t GPU available")
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        print("\t   Memory growth habilitado")
+    else:
+        print("\n  No se detectó GPU, usando CPU")
+    return len(gpus) > 0
+        
+    print("-----------------------------------------------------------------")
+
 def reproducibility():
     np.random.seed(42)
     random.seed(42)
@@ -107,19 +117,6 @@ def parse_args():
     return parser.parse_args()
 
 
-def setup_gpu():
-    """Configura GPU si está disponible."""
-    gpus = tf.config.list_physical_devices('GPU')
-    if gpus:
-        print(f"\n🎮 GPU detectada: {gpus}")
-        for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True)
-        print("   Memory growth habilitado")
-    else:
-        print("\n⚠️  No se detectó GPU, usando CPU")
-    return len(gpus) > 0
-
-
 def main():
     args = parse_args()
     
@@ -139,8 +136,6 @@ def main():
     #args.filepath= ""
     #python train.py --input_window 100 --output_window 20 --epochs 50
     
-    # Setup
-    has_gpu = setup_gpu()
     
     # Nombre del experimento
     if args.experiment_name is None:

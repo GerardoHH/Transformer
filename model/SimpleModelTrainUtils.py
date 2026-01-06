@@ -4,29 +4,29 @@ import tensorflow as tf
 from tensorflow import keras
 from Plot import PlotUtils as pltU
 from model.Transformer import SimpleTransformer 
-from Dataset.DatasetUtils import MathTranslationDataset
+from Datasource.DatasetUtils import MathTranslationDataset
 
 # ==================== FUNCIONES DE ENTRENAMIENTO ====================
 def masked_loss(y_true, y_pred):
-    """Función de pérdida con máscara para padding."""
+    """Funcion de perdida con mascara para padding."""
     # y_true shape: (batch_size, seq_len)
     # y_pred shape: (batch_size, seq_len, vocab_size)
     
     loss_fn = keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction='none')
     loss = loss_fn(y_true, y_pred)
     
-    # Crear máscara para ignorar padding
+    # Crear mÃ¡scara para ignorar padding
     mask = tf.cast(y_true != 0, dtype=loss.dtype)
     loss *= mask
     
-    # Evitar división por cero
+    # Evitar divisiÃ³n por cero
     mask_sum = tf.reduce_sum(mask)
     mask_sum = tf.maximum(mask_sum, 1.0)
     
     return tf.reduce_sum(loss) / mask_sum
 
 def masked_accuracy(y_true, y_pred):
-    """Función de accuracy con máscara para padding."""
+    """FunciÃ³n de accuracy con mÃ¡scara para padding."""
     # y_true shape: (batch_size, seq_len)
     # y_pred shape: (batch_size, seq_len, vocab_size)
     
@@ -36,7 +36,7 @@ def masked_accuracy(y_true, y_pred):
     match = tf.cast(y_true == y_pred, dtype=tf.float32)
     mask = tf.cast(y_true != 0, dtype=tf.float32)
     
-    # Evitar división por cero
+    # Evitar divisiÃ³n por cero
     mask_sum = tf.reduce_sum(mask)
     mask_sum = tf.maximum(mask_sum, 1.0)
     
@@ -44,7 +44,7 @@ def masked_accuracy(y_true, y_pred):
 
 def train_transformer(epochs=30, batch_size=64):
     """
-    Entrena el modelo Transformer con el dataset de matemáticas.
+    Entrena el modelo Transformer con el dataset de matemÃ¡ticas.
     """
     print("=" * 50)
     print("PREPARANDO DATASET")
@@ -54,8 +54,8 @@ def train_transformer(epochs=30, batch_size=64):
     dataset = MathTranslationDataset(num_samples=5000, max_number=50)
     train_data, val_data, examples = dataset.prepare_dataset(batch_size=batch_size)
     
-    print(f"Tamaño del vocabulario de entrada: {dataset.input_vocab_size}")
-    print(f"Tamaño del vocabulario de salida: {dataset.output_vocab_size}")
+    print(f"TamaÃ±o del vocabulario de entrada: {dataset.input_vocab_size}")
+    print(f"TamaÃ±o del vocabulario de salida: {dataset.output_vocab_size}")
     print(f"Ejemplos del dataset:")
     for inp, out in zip(examples[0][:5], examples[1][:5]):
         print(f"  {inp:15s} -> {out}")
@@ -88,7 +88,7 @@ def train_transformer(epochs=30, batch_size=64):
         metrics=[masked_accuracy]
     )
     
-    print(f"Modelo creado con {model.count_params():,} parámetros")
+    print(f"Modelo creado con {model.count_params():,} parÃ¡metros")
     
     print("\n" + "=" * 50)
     print("ENTRENANDO MODELO")
@@ -119,10 +119,10 @@ def train_transformer(epochs=30, batch_size=64):
 
 def evaluate_model(model, dataset, num_examples=10):
     """
-    Evalúa el modelo con ejemplos de prueba.
+    EvalÃºa el modelo con ejemplos de prueba.
     """
     print("\n" + "=" * 50)
-    print("EVALUACIÓN DEL MODELO")
+    print("EVALUACIÃ“N DEL MODELO")
     print("=" * 50)
     
     # Generar nuevos ejemplos de prueba
@@ -148,15 +148,15 @@ def evaluate_model(model, dataset, num_examples=10):
         
         # Generar tokens uno por uno (inferencia autoregresiva)
         for step in range(10):
-            # Convertir lista a tensor y agregar dimensión batch
+            # Convertir lista a tensor y agregar dimensiÃ³n batch
             decoder_input = tf.expand_dims(
                 tf.constant(decoder_input_list, dtype=tf.int32), 0
             )
             
-            # Obtener predicción del modelo
+            # Obtener predicciÃ³n del modelo
             pred = model([encoder_input, decoder_input], training=False)
             
-            # Obtener el token con mayor probabilidad del último timestep
+            # Obtener el token con mayor probabilidad del Ãºltimo timestep
             # pred shape: (1, seq_len, vocab_size)
             last_token_logits = pred[0, -1, :]  # (vocab_size,)
             next_token = tf.argmax(last_token_logits).numpy()
@@ -183,24 +183,24 @@ def evaluate_model(model, dataset, num_examples=10):
         is_correct = decoded_preds[i] == test_outputs[i]
         if is_correct:
             correct += 1
-        status = "✓" if is_correct else "✗"
-        print(f"{status} {test_inputs[i]:12s} = {test_outputs[i]:15s} | Predicción: {decoded_preds[i]}")
+        status = "âœ“" if is_correct else "âœ—"
+        print(f"{status} {test_inputs[i]:12s} = {test_outputs[i]:15s} | PredicciÃ³n: {decoded_preds[i]}")
     
     accuracy = correct / len(test_inputs) * 100
-    print(f"\nPrecisión: {accuracy:.1f}% ({correct}/{len(test_inputs)})")
+    print(f"\nPrecisiÃ³n: {accuracy:.1f}% ({correct}/{len(test_inputs)})")
     
     return accuracy
 
 
 def build_and_train_simpleTrasformer():
     """
-    Función principal para ejecutar el ejemplo completo.
+    FunciÃ³n principal para ejecutar el ejemplo completo.
     """
     print("\n" + "=" * 50)
-    print("TRANSFORMER: TRADUCTOR DE OPERACIONES MATEMÁTICAS")
+    print("TRANSFORMER: TRADUCTOR DE OPERACIONES MATEMATICAS")
     print("=" * 50)
     print("\nEste ejemplo entrena un Transformer para traducir")
-    print("operaciones matemáticas a su resultado en palabras.")
+    print("operaciones matemÃ¡ticas a su resultado en palabras.")
     print("Ejemplo: '5 + 3' -> 'eight'\n")
     
     # Configurar semilla para reproducibilidad
@@ -213,7 +213,7 @@ def build_and_train_simpleTrasformer():
         model, dataset, history = train_transformer(epochs=100, batch_size=32)
         
         # Evaluar modelo
-        print("\nIniciando evaluación del modelo...")
+        print("\nIniciando evaluaciÃ³n del modelo...")
         accuracy = evaluate_model(model, dataset, num_examples=20)
         
         # Graficar historial
@@ -230,7 +230,7 @@ def build_and_train_simpleTrasformer():
         print("(Ingresa 'salir' para terminar)")
         
         while True:
-            user_input = input("\nIngresa una operación (ej: '7 + 5'): ")
+            user_input = input("\nIngresa una operaciÃ³n (ej: '7 + 5'): ")
             if user_input.lower() == 'salir':
                 break
             
@@ -247,14 +247,14 @@ def build_and_train_simpleTrasformer():
                 # Lista para acumular tokens del decoder
                 decoder_input_list = [dataset.start_token]
                 
-                # Generar predicción token por token
+                # Generar predicciÃ³n token por token
                 for _ in range(10):
                     # Convertir lista a tensor
                     decoder_input = tf.expand_dims(
                         tf.constant(decoder_input_list, dtype=tf.int32), 0
                     )
                     
-                    # Obtener predicción
+                    # Obtener predicciÃ³n
                     pred = model([encoder_input, decoder_input], training=False)
                     
                     # Obtener siguiente token
@@ -283,16 +283,16 @@ def build_and_train_simpleTrasformer():
             
             except Exception as e:
                 print(f"Error: {e}")
-                print("Intenta con una operación simple como '5 + 3'")
+                print("Intenta con una operaciÃ³n simple como '5 + 3'")
     
     except Exception as e:
-        print(f"\nError durante la ejecución: {e}")
+        print(f"\nError durante la ejecuciÃ³n: {e}")
         print("\nDetalles del error:")
         import traceback
         traceback.print_exc()
         
         print("\n" + "=" * 50)
-        print("DEPURACIÓN")
+        print("DEPURACIÃ“N")
         print("=" * 50)
         print("Verificando componentes individuales...")
         
@@ -301,7 +301,7 @@ def build_and_train_simpleTrasformer():
             print("1. Probando dataset...")
             test_dataset = MathTranslationDataset(num_samples=100)
             test_train, test_val, _ = test_dataset.prepare_dataset(batch_size=16)
-            print("   ✓ Dataset funciona correctamente")
+            print("   âœ“ Dataset funciona correctamente")
             
             # Probar modelo
             print("2. Probando modelo...")
@@ -316,11 +316,11 @@ def build_and_train_simpleTrasformer():
             for batch in test_train.take(1):
                 inputs, targets = batch
                 output = test_model(inputs, training=False)
-                print(f"   ✓ Forward pass funciona - Output shape: {output.shape}")
+                print(f"   âœ“ Forward pass funciona - Output shape: {output.shape}")
             
         except Exception as debug_error:
-            print(f"   ✗ Error en componentes: {debug_error}")
+            print(f"   âœ— Error en componentes: {debug_error}")
     
-    print("\n¡Gracias por probar el Transformer!")
+    print("\nÂ¡Gracias por probar el Transformer!")
 
     
