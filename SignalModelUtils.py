@@ -8,7 +8,7 @@ import tensorflow as tf
 from datetime import datetime
 
 
-from Dataset.SignalDataset import SignalDataset, create_signal_dataset
+from Datasource.SignalDataset import SignalDataset, create_signal_dataset
 from model.signal.SignalTransformer import SignalTransformer
 from model.utils.SignalTrainingUtils import (
     TransformerLRSchedule,
@@ -124,7 +124,7 @@ def main():
     args = parse_args()
     
     #Custom parms
-    args.data_path = os.getcwd()+os.sep+"Dataset"+os.sep+
+    args.data_path = os.getcwd()+os.sep+"Dataset"+os.sep+"signal" + os.sep + "true_dynamics.csv"
     """
      filepath=args.data_path,
         input_features=args.input_features,
