@@ -20,6 +20,9 @@ from model.utils.SignalTrainingUtils import (
     SignalMetrics
 )
 def enviroment():
+
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
+    
     print(f"Enviroment: ")
     print(f"\tPython {sys.version}")
     print(f"\tNumpy  {np.__version__}")
@@ -119,7 +122,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    
+
     #Custom parms
     args.data_path = os.getcwd()+os.sep+"Dataset"+os.sep+"signal" + os.sep + "true_dynamics.csv"
     """
@@ -135,32 +138,19 @@ def main():
 
     #args.filepath= ""
     #python train.py --input_window 100 --output_window 20 --epochs 50
-    
-    
-    # Nombre del experimento
-    if args.experiment_name is None:
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        args.experiment_name = f'signal_transformer_{timestamp}'
-    
+        
     # Crear directorios
-    exp_dir = os.path.join(args.output_dir, args.experiment_name)
-    checkpoint_dir = os.path.join(exp_dir, 'checkpoints')
-    log_dir = os.path.join(exp_dir, 'logs')
-    os.makedirs(exp_dir, exist_ok=True)
-    os.makedirs(checkpoint_dir, exist_ok=True)
-    os.makedirs(log_dir, exist_ok=True)
+    #exp_dir = os.path.join(args.output_dir, args.experiment_name)
+    #checkpoint_dir = os.path.join(exp_dir, 'checkpoints')
+    #log_dir = os.path.join(exp_dir, 'logs')
+    #os.makedirs(exp_dir, exist_ok=True)
+    #os.makedirs(checkpoint_dir, exist_ok=True)
+    #os.makedirs(log_dir, exist_ok=True)
     
     print("\n" + "="*60)
     print("SIGNAL TRANSFORMER - ENTRENAMIENTO")
     print("="*60)
-    print(f"\nExperimento: {args.experiment_name}")
-    print(f"Output dir: {exp_dir}")
-    
-    # Guardar configuración
-    config = vars(args)
-    with open(os.path.join(exp_dir, 'config.json'), 'w') as f:
-        json.dump(config, f, indent=2)
-    
+        
     # =========================================================================
     # Dataset
     # =========================================================================
