@@ -1,6 +1,7 @@
-from model.custom.encoder.EncoderLayer import EncoderLayer
-from model.custom.embedding.PositionalEmbedding import PositionalEmbedding
 import tensorflow as tf
+from .EncoderLayer import EncoderLayer
+from ..embedding.SignalEmbedding import SignalEmbedding
+
 
 class Encoder(tf.keras.layers.Layer):
     """

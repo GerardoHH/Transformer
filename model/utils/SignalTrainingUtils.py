@@ -133,7 +133,7 @@ def create_callbacks(
     model_name: str = 'signal_transformer'
 ) -> list:
     """
-    Crea callbacks est�ndar para entrenamiento.
+    Crea callbacks estandar para entrenamiento.
     
     Returns:
     --------

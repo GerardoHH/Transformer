@@ -125,6 +125,12 @@ def main():
 
     #Custom parms
     args.data_path = os.getcwd()+os.sep+"Dataset"+os.sep+"signal" + os.sep + "true_dynamics.csv"
+    
+    base_output = os.path.join(os.getcwd(),'Outputs')
+    
+    checkpoint_dir = os.path.join(base_output, 'checkpoints')
+    log_dir = os.path.join(base_output, 'logs')
+    
     """
      filepath=args.data_path,
         input_features=args.input_features,
@@ -141,8 +147,7 @@ def main():
         
     # Crear directorios
     #exp_dir = os.path.join(args.output_dir, args.experiment_name)
-    #checkpoint_dir = os.path.join(exp_dir, 'checkpoints')
-    #log_dir = os.path.join(exp_dir, 'logs')
+   
     #os.makedirs(exp_dir, exist_ok=True)
     #os.makedirs(checkpoint_dir, exist_ok=True)
     #os.makedirs(log_dir, exist_ok=True)
@@ -250,7 +255,7 @@ def main():
         validation_data=val_ds,
         epochs=args.epochs,
         callbacks=callbacks,
-        verbose=1
+        verbose=2
     )
     
     # =========================================================================
