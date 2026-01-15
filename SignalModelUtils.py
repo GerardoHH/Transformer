@@ -17,6 +17,8 @@ from model.utils.SignalTrainingUtils import (
     plot_training_history,
     plot_predictions,
     plot_multistep_prediction,
+    plot_full_signal_comparison,
+    plot_multistep_prediction,
     SignalMetrics
 )
 def enviroment():
@@ -125,12 +127,31 @@ def main():
 
     #Custom parms
     args.data_path = os.getcwd()+os.sep+"Dataset"+os.sep+"signal" + os.sep + "true_dynamics.csv"
+    args.epochs = 25
+
+    args.num_layers = 2
+    args.d_model =64
+    args.num_heads = 2
+    args.dff = 64
+    
+    print("\n" + "="*60)
+    print("\nHiperparameters")
+    print(f"\tnum_layers: {args.num_layers}")
+    print(f"\td_model: {args.d_model}")
+    print(f"\tnum_heads: {args.num_heads}")
+    print(f"\td_ff: {args.dff}")
+    print(f"\tinput_features: {args.input_features}")
+    print(f"\toutput_window: {args.output_window}")
+    print(f"\tdropout: {args.dropout}")
+    print("\n" + "="*60)
     
     base_output = os.path.join(os.getcwd(),'Outputs')
     
+    
     checkpoint_dir = os.path.join(base_output, 'checkpoints')
     log_dir = os.path.join(base_output, 'logs')
-    
+    exp_dir = os.path.join(base_output, 'metrics')
+
     """
      filepath=args.data_path,
         input_features=args.input_features,
@@ -144,10 +165,7 @@ def main():
 
     #args.filepath= ""
     #python train.py --input_window 100 --output_window 20 --epochs 50
-        
-    # Crear directorios
-    #exp_dir = os.path.join(args.output_dir, args.experiment_name)
-   
+
     #os.makedirs(exp_dir, exist_ok=True)
     #os.makedirs(checkpoint_dir, exist_ok=True)
     #os.makedirs(log_dir, exist_ok=True)
@@ -262,7 +280,7 @@ def main():
     # Guardar modelo final
     # =========================================================================
     model.save_weights(os.path.join(checkpoint_dir, 'signal_transformer_final.weights.h5'))
-    print(f"\n✅ Modelo guardado en {checkpoint_dir}")
+    print(f"\n Modelo guardado en {checkpoint_dir}")
     
     # =========================================================================
     # Evaluación
@@ -351,7 +369,28 @@ def main():
                 save_path=os.path.join(exp_dir, f'prediction_sample_{idx}.png')
             )
     
-    print(f"\n✅ Visualizaciones guardadas en {exp_dir}")
+    # =========================================================================
+    # Gráfica comparativa de señal completa
+    # =========================================================================
+    print("\n" + "-"*60)
+    print("GENERANDO COMPARACIÓN DE SEÑAL COMPLETA")
+    print("-"*60)
+    
+    # Comparación en conjunto de entrenamiento
+    fig_train, metrics_train = plot_full_signal_comparison(
+        model=model,
+        dataset=dataset,
+        split='train',
+        save_path=os.path.join(exp_dir, 'full_signal_comparison_train.png')
+    )
+    
+    # Comparación en conjunto de test
+    fig_test, metrics_test = plot_full_signal_comparison(
+        model=model,
+        dataset=dataset,
+        split='test',
+        save_path=os.path.join(exp_dir, 'full_signal_comparison_test.png')
+    )
     
     # =========================================================================
     # Resumen final
